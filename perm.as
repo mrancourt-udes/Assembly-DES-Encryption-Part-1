@@ -1,12 +1,23 @@
-perm00:	mov		%i2,%l1
+        .file   "perm.as"
 
-perm05:	ldub	[%i1],%l2
-		mov		1,%l3
-		sub		%l1,%l2,%l2
-		sllx	%l3,%l2,%l3
+/* Pgm: permutation
+   auteur:  Vincent Ribou
+            Martin Rancourt
+            
+*/
+        .global perm
+        .section ".text"
 
-		bset	%l3,%l4
-		xor		%l4,%i2,%o0
+perm:   clr     %l0            ! initialisation du compteur de tableau
 
-		dec		%l2
-		brnz	%l2
+perm05:	ldub	[%i1+l0],%l2   ! chargement de l''index de permutation
+		mov		1,%l3          ! bit de droite
+		sub		%i2,%l2,%l2    ! nb entrees dans la table - index de permutation
+		sllx	%l3,%l2,%l3    ! decalage vers la position finale
+
+        and     %l3,%i0,%l3    ! recuperation du bit de depart
+		xor		%l3,%o0,%o0    ! copie du bit dans la chaine de sortie
+
+        cmp     %l0,i2         ! comparer cpt tableau avec nb elements tableau
+		brne	perm05         ! fin du tableau ?
+        inc     1,%l0
