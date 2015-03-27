@@ -10,7 +10,7 @@
         .section ".text"
 
 des:    setx    IP,%l7,%o1        ! chargement de l’adresse de la table IP
-        mov     %i0,o0            ! chaine de 64 bits recu en parametre
+        mov     %i0,o0            ! chaine de 64 bits
         mov     64,%o2            ! nb d’entrees dans la table de permutation
         call    Perm              ! permutation de la chaine de 64 bits
 
@@ -21,19 +21,19 @@ des:    setx    IP,%l7,%o1        ! chargement de l’adresse de la table IP
         mov     %i1,%o0           ! cle de 64 bit
         call    Key
 
-        mov     15,%l3            ! initialisation iterateur pour faire 15 cle
+        mov     15,%l3            ! nombre de cles a generer
 
-des05:  mov     %l2,%o0
+des05:  mov     %l2,%o0           
         call    NextKey
         mov     %i0,%o1
         call    DESf
 
 
-        xor     %i0,%l1,%l2      ! ou excluif entre la partie de gauche et resultat de f
-        mov     %l2,%l1          ! inverse le cote gauche du droit
+        xor     %i0,%l1,%l2       ! ou excluif entre la partie de gauche et resultat de f
+        mov     %l2,%l1           ! inverse le cote gauche du droit
 
         dec     %l3
-        brnz    %l3,des05        ! boucle
+        brnz    %l3,des05         ! boucle
         nop
 
 des10:  mov     %l2,%o0
