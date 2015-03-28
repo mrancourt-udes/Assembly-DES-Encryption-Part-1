@@ -10,7 +10,7 @@
         .section ".text"
 
 des:    setx    IP,%l7,%o1        ! chargement de l''adresse de la table IP
-        mov     %i0,o0            ! chaine de 64 bits
+        mov     %i0,%o0            ! chaine de 64 bits
         mov     64,%o2            ! nb d''entrees dans la table de permutation
         call    Perm              ! permutation de la chaine de 64 bits
 

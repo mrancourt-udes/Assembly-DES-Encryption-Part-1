@@ -14,7 +14,7 @@ subs:   mov     0x20,%l1        ! mask : 100000
         srlx    %l1,4,%l1       ! decalage du bit vers : 0000*0
 
         mov     1,%l2           ! mask : 000001
-        xor     %l2,i0%l2       ! recuperation le premier bit a droite
+        xor     %l2,%i0%l2       ! recuperation le premier bit a droite
 
         xor     %l1,%l2,%l3     ! deux bit concatene 0000** (i)
 
