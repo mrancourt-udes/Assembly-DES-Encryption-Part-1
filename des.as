@@ -14,7 +14,7 @@ des:    setx    IP,%l7,%o1        ! chargement de l''adresse de la table IP
         mov     64,%o2            ! nb d''entrees dans la table de permutation
         call    Perm              ! permutation de la chaine de 64 bits
 
-        srlx    %io,32,%l1        ! 32 bit a gauche
+        srlx    %i0,32,%l1        ! 32 bit a gauche
         sllx    %i0,32,%l2        ! elimmination de ce qui a a droit des 32 bit de gauche
         srlx    %l2,32,%l2        ! 32 bit de droite
 
@@ -43,7 +43,7 @@ des10:  mov     %l2,%o0
 
         xor     %i0,%l2,%l4
 
-        dllx    %l4,32,%l4
+        sllx    %l4,32,%l4
         or      %l4,%l1,%o0
 
         setx    IP_1,%l7,%o1
@@ -113,7 +113,7 @@ S3:     .byte   10,0,9,14,6,3,15,5,1,13,12,7,11,4,2,8
         .byte   1,10,13,0,6,9,8,7,4,15,14,3,11,5,2,12
 
         .align  4
-S4;     .byte   7,13,14,3,0,6,9,10,1,2,8,5,11,12,4,15
+S4:     .byte   7,13,14,3,0,6,9,10,1,2,8,5,11,12,4,15
         .byte   13,8,11,5,6,15,0,3,4,7,2,12,1,10,14,9
         .byte   10,6,9,0,12,11,7,13,15,1,3,14,5,2,8,4
         .byte   3,15,0,6,10,1,13,8,9,4,5,11,12,7,2,14
