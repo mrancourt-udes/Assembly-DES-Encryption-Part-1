@@ -1,4 +1,4 @@
-.global perm
+.global Perm
 /*  Perm   : sous-programme qui permute une chaine de bits.
     entree : %i0, la chaine de bits (le bit 1 aligne a gauche).
              %i1, l'adresse de la table de permutation.
@@ -8,7 +8,7 @@
 */
         .section ".text"
 
-perm:   clr     %l0            ! initialisation du compteur de tableau
+Perm:   clr     %l0            ! initialisation du compteur de tableau
 
 perm05: ldub    [%i1+%l0],%l2   ! chargement de l''index de permutation
         mov     1,%l3          ! bit de droite
