@@ -1,0 +1,41 @@
+TARGET_DES = .
+
+$(TARGET_DES)/DES:	$(TARGET_DES)/perm.o $(TARGET_DES)/subs.o $(TARGET_DES)/key.o $(TARGET_DES)/DESf.o $(TARGET_DES)/des.o $(TARGET_DES)/desInv.o $(TARGET_DES)/pgm.o
+	/usr/ccs/bin/ld -e main -o $(TARGET_DES)/DES $(TARGET_DES)/perm.o \
+	$(TARGET_DES)/subs.o $(TARGET_DES)/key.o $(TARGET_DES)/DESf.o \
+	$(TARGET_DES)/des.o $(TARGET_DES)/desInv.o $(TARGET_DES)/pgm.o -lc
+
+$(TARGET_DES)/pgm.o:	pgm.as
+	/usr/ccs/bin/as -xarch=v9 pgm.as -o $(TARGET_DES)/pgm.o;
+
+$(TARGET_DES)/des.o:	des.as
+	/usr/ccs/bin/as -xarch=v9 des.as -o $(TARGET_DES)/des.o;
+
+$(TARGET_DES)/desInv.o:	desInv.as
+	/usr/ccs/bin/as -xarch=v9 desInv.as -o $(TARGET_DES)/desInv.o;
+
+$(TARGET_DES)/DESf.o:	DESf.as
+	/usr/ccs/bin/as -xarch=v9 DESf.as -o $(TARGET_DES)/DESf.o;
+
+$(TARGET_DES)/key.o:	key.as
+	/usr/ccs/bin/as -xarch=v9 key.as -o $(TARGET_DES)/key.o;
+
+$(TARGET_DES)/perm.o:	perm.as
+	/usr/ccs/bin/as -xarch=v9 perm.as -o $(TARGET_DES)/perm.o;
+
+$(TARGET_DES)/subs.o:	subs.as
+	/usr/ccs/bin/as -xarch=v9 subs.as -o $(TARGET_DES)/subs.o;
+
+Clean:
+	$(RM) \
+	$(TARGET_DES)/DES \
+	$(TARGET_DES)/perm.o \
+	$(TARGET_DES)/subs.o \
+	$(TARGET_DES)/key.o \
+	$(TARGET_DES)/DESf.o \
+	$(TARGET_DES)/des.o \
+	$(TARGET_DES)/desInv.o \
+	$(TARGET_DES)/pgm.o \
+	$(TARGET_DES)/core
+	\rm -rf SunWS_cache
+	\rm -rf SunWS_config

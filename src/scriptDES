@@ -1,0 +1,19 @@
+#!/bin/csh
+if (-f pgm.as) then
+    echo "compilation de pgm.as"
+    as -xarch=v9 pgm.as -o pgm.o
+endif
+if (-f des.as) then
+    echo "compilation de des.as"
+    as -xarch=v9 des.as -o des.o
+endif
+if (-f perm.as) then
+    echo "compilation de perm.as"
+    as -xarch=v9 perm.as -o perm.o
+endif
+if (-f subs.as) then
+    echo "compilation de subs.as"
+    as -xarch=v9 subs.as -o subs.o
+endif
+echo "Editions des liens"
+ld -e main pgm.o des.o desInv.o DESf.o key.o perm.o subs.o -o DES -lc

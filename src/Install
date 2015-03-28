@@ -1,0 +1,23 @@
+cp -p /home/public/cours/ift209/Devoir1/DESf.o .
+cp /home/public/cours/ift209/Devoir1/MakeDES .
+cp -p /home/public/cours/ift209/Devoir1/des.o .
+cp -p /home/public/cours/ift209/Devoir1/desInv.o .
+cp -p /home/public/cours/ift209/Devoir1/key.o .
+cp -p /home/public/cours/ift209/Devoir1/perm.o .
+cp /home/public/cours/ift209/Devoir1/pgm.as .
+cp -p /home/public/cours/ift209/Devoir1/pgm.o .
+cp -p  /home/public/cours/ift209/Devoir1/subs.o .
+cp /home/public/cours/ift209/Devoir1/test1.des .
+cp /home/public/cours/ift209/Devoir1/test2.des .
+cp /home/public/cours/ift209/Devoir1/test3.des .
+/usr/bin/touch 01010101 DESf.as
+/usr/bin/touch 01010101 des.as
+/usr/bin/touch 01010101 desInv.as
+/usr/bin/touch 01010101 key.as
+/usr/bin/touch 01010101 perm.as
+/usr/bin/touch 01010101 subs.as
+make -f MakeDES
+DES < test1.des
+DES < test2.des
+DES < test3.des
+
