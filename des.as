@@ -1,17 +1,17 @@
         .global des
-/*  DES    : sous-programme d’encodage (Data Encryption Standard).
+/*  DES    : sous-programme d'encodage (Data Encryption Standard).
     entree : %i0, la chaine de 64 bits (le bit 1 aligne a gauche).
             %i1, la cle de 64 bits (le bit 1 aligne a gauche).
-            %i2, l’adresse de la chaine de sortie (effectif si non nul).
+            %i2, l'adresse de la chaine de sortie (effectif si non nul).
     sortie : %o0, la chaine encodee de 64 bits (le bit 1 aligne a gauche).
     auteur:  Vincent Ribou et Martin Rancourt Universite de Sherbrooke, 2015.
 */
 
         .section ".text"
 
-des:    setx    IP,%l7,%o1        ! chargement de l’adresse de la table IP
+des:    setx    IP,%l7,%o1        ! chargement de l''adresse de la table IP
         mov     %i0,o0            ! chaine de 64 bits
-        mov     64,%o2            ! nb d’entrees dans la table de permutation
+        mov     64,%o2            ! nb d''entrees dans la table de permutation
         call    Perm              ! permutation de la chaine de 64 bits
 
         srlx    %io,32,%l1        ! 32 bit a gauche

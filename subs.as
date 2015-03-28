@@ -2,7 +2,7 @@
 /*  Subs   : sous-programme qui substitue une chaine de 6 bits par
              une chaine de 4 bits.
     entree : %i0, la chaine de 6 bits (le bit 6 aligne a droite).
-             %i1, l’adresse de la table de substitution.
+             %i1, l'adresse de la table de substitution.
     sortie : %o0, la chaine de 4 bits (le bit 4 aligne a droite).
     auteur:  Vincent Ribou et Martin Rancourt Universite de Sherbrooke, 2015.
 */
@@ -18,7 +18,7 @@ subs:   mov     0x20,%l1        ! mask : 100000
 
         xor     %l1,%l2,%l3     ! deux bit concatene 0000** (i)
 
-        mov     0x1E,%l2        ! creation d’un masque 011110
+        mov     0x1E,%l2        ! creation d''un masque 011110
         xor     %l2,%i0,%l2     ! recuperation des 4 bits du centre
         srlx    %l2,1,%l2       ! valeur reelle des 4 bits du centre (j)
 
