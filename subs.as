@@ -28,6 +28,6 @@ Subs:   mov     0x20,%l1        ! mask : 100000
         mulx    %l3,4,%l3       ! (i-1)*4
         dec     1,%l2           ! j-1
         add     %l2,%l3,%l2     ! ((i-1)*N+(j-1)
-        add     %i2,%l2,%l2     ! alpha + ((i-1)*N+(j-1)
+        add     %i1,%l2,%l2     ! alpha + ((i-1)*N+(j-1)
 
         ldub    [%l2],%o0       ! chargement de la valeur contenu dans le tableau
