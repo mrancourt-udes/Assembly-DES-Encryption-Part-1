@@ -8,49 +8,65 @@
 */
         .section ".text"
 
-Perm:   clr     %l0            ! initialisation du compteur de tableau
+Perm:  
+        save    %sp,-208,%sp
+        clr     %l0                 ! initialisation du compteur de tableau 
+        clr     %l3                 ! valeur de sortie : a transferer dans %o0
 
-init:   mov     64,%i2
-        setx    IP,%l7,%i1
-        clr     %o3
+        setx    ptfmtxx,%l7,%o0     ! 1er : adresse de la chaine a imprimer
+        mov     %i0,%o2             ! 2em : chaine permute
+        srlx    %o2,32,%o1          ! 2em : chaine permute
+        call    printf              ! imprimer les resultats
+        nop
+
 
 perm05: 
         
-        setx    ptfmt,%l7,%o0 ! 1er : adresse de la chaine a imprimer
-        mov     %l0,%o1       ! 2em : valeur du compteur
-        call    printf        ! imprimer les resultats
+        ldub    [%i1+%l0],%l2       ! chargement de l''index de permutation
+        inc     1,%l0               ! index dans la table
+
+        sub     %i2,%l0,%l1         ! nb elements - index table : position du bit courant
+        
+        mov     1,%l4               ! initialisation du bit du mask 
+        sllx    %l4,%l1,%l1         ! decalage du bit vers la position du bit courant
+        and     %l1,%i0,%l1         ! recuperation de la valeur du bit courent
+
+        sub     %l2,%l0,%l4         ! index de permutation - index effectif : indice de decalage
+
+        cmp     %l4,%g0
+        bneg    %xcc,perm15
+
+perm10:                             ! decalage positif
+        srlx    %l1,%l4,%l1
+
+        ba      perm20
         nop
 
-        ldub    [%i1+1],%l2   ! chargement de l''index de permutation
-             
-        mov     1,%l3          ! bit de droite
-        sub     %i2,%l2,%l2    ! nb entrees dans la table - index de permutation
-        sllx    %l3,%l2,%l3    ! decalage vers la position finale
+perm15:                             ! decalage negatif
+        neg     %l4,%l4             
+        sllx    %l1,%l4,%l1
 
-        and     %l3,%i0,%l3    ! recuperation du bit de depart
-        xor     %l3,%o3,%o3    ! copie du bit dans la chaine de sortie
-        
-        cmp     %l0,%i2        ! comparer cpt tableau avec nb elements tableau
-        bne     perm05         ! fin du tableau ?
-        inc     1,%l0
+perm20:     
+        xor     %l1,%l3,%l3
 
-        setx    ptfmt,%l7,%o0  ! 1er : adresse de la chaine a imprimer
-        mov     %o3,%o1        ! 2em : chaine permute
-        call    printf         ! imprimer les resultats
+        cmp     %l0,%i2             ! cmp index tableau avec nb elements tableau
+        bne     perm05              ! fin du tableau ?
+        nop 
+
+        mov     %l3,%i0             ! copie de la valeur de sortie temporaire dans %o0
+
+        setx    ptfmtxx,%l7,%o0     ! 1er : adresse de la chaine a imprimer
+        mov     %i0,%o2             ! 2em : 32 bits de gauche
+        srlx    %o2,32,%o1          ! 2em : 32 bits de droite
+        call    printf              ! imprimer les resultats
         nop
 
-        mov %o3,%o0            ! copie de la valeur de sortie temporaire dans %o0
+        call exit
 
-        call    exit
-        
-        .section ".rodata"     ! section de donnees en lecture seulement
-ptfmt: .asciz  "\n==============\nPERM.as - %u\n==============\n\n"
+        .section ".rodata"          ! section de donnees en lecture seulement
 
-IP:     .byte   58,50,42,34,26,18,10,2
-        .byte   60,52,44,36,28,20,12,4
-        .byte   62,54,46,38,30,22,14,6
-        .byte   64,56,48,40,32,24,16,8
-        .byte   57,49,41,33,25,17,9,1
-        .byte   59,51,43,35,27,19,11,3
-        .byte   61,53,45,37,29,21,13,5
-        .byte   63,55,47,39,31,23,15,7
+ptfmtd: .asciz "%d\n"
+ptfmtxx:.asciz "%08x%08x\n"
+
+        .align  8
+I0:     .xword  0x3fa40e8a984d4815
