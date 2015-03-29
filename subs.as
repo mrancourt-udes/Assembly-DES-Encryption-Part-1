@@ -9,17 +9,18 @@
 
         .section ".text"
 
-Subs:   mov     0x20,%l1        ! mask : 100000
-        xor     %l1,%i0,%l1     ! recuperation du dernier bit de gauche
+Subs:   save    %sp,-208,%sp  
+        mov     0x20,%l1        ! mask : 100000
+        and     %l1,%i0,%l1     ! recuperation du dernier bit derniere gauche
         srlx    %l1,4,%l1       ! decalage du bit vers : 0000*0
 
         mov     1,%l2           ! mask : 000001
-        xor     %l2,%i0,%l2      ! recuperation le premier bit a droite
+        and     %l2,%i0,%l2     ! recuperation le premier bit a droite
 
         xor     %l1,%l2,%l3     ! deux bit concatene 0000** (i)
 
         mov     0x1E,%l2        ! creation d''un masque 011110
-        xor     %l2,%i0,%l2     ! recuperation des 4 bits du centre
+        and     %l2,%i0,%l2     ! recuperation des 4 bits du centre
         srlx    %l2,1,%l2       ! valeur reelle des 4 bits du centre (j)
 
                                 ! calcul de ladresse dans le tableau
@@ -31,3 +32,6 @@ Subs:   mov     0x20,%l1        ! mask : 100000
         add     %i1,%l2,%l2     ! alpha + ((i-1)*N+(j-1)
 
         ldub    [%l2],%o0       ! chargement de la valeur contenu dans le tableau
+
+        ret
+        restore %sp,-208,%sp
