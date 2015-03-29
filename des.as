@@ -39,7 +39,7 @@ des05:  mov     %l2,%o0
 des10:  mov     %l2,%o0
         call    NextKey
         mov     %l0,%o1
-        call    desf
+        call    DESf
 
         xor     %i0,%l2,%l4
 
@@ -49,7 +49,7 @@ des10:  mov     %l2,%o0
         setx    IP_1,%l7,%o1
         mov     64,%o2
 
-        call    PERM
+        call    Perm
         mov     %i0,%o0
 
 
