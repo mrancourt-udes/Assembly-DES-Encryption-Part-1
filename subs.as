@@ -9,8 +9,11 @@
 
         .section ".text"
 
-Subs:   save    %sp,-208,%sp  
+Subs:   
+        save    %sp,-208,%sp
+
         mov     0x20,%l1        ! mask : 100000
+
         and     %l1,%i0,%l1     ! recuperation du dernier bit derniere gauche
         srlx    %l1,4,%l1       ! decalage du bit vers : 0000*0
 
@@ -24,14 +27,12 @@ Subs:   save    %sp,-208,%sp
         srlx    %l2,1,%l2       ! valeur reelle des 4 bits du centre (j)
 
                                 ! calcul de ladresse dans le tableau
-                                ! alpha + ((i-1)*N+(j-1)
-        dec     1,%l3           ! i-1
-        mulx    %l3,4,%l3       ! (i-1)*4
-        dec     1,%l2           ! j-1
-        add     %l2,%l3,%l2     ! ((i-1)*N+(j-1)
-        add     %i1,%l2,%l2     ! alpha + ((i-1)*N+(j-1)
+                                ! alpha + i*N+j
+        mulx    %l3,16,%l3      ! i*16
+        add     %l2,%l3,%l2     ! i*N+j
+        add     %i1,%l2,%l2     ! alpha + i*N+j
 
-        ldub    [%l2],%o0       ! chargement de la valeur contenu dans le tableau
+        ldub    [%l2],%i0       ! chargement de la valeur contenu dans le tableau
 
         ret
-        restore %sp,-208,%sp
+        restore
