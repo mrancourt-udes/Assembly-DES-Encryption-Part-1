@@ -1,25 +1,27 @@
         .global DES
 /*  DES    : sous-programme d'encodage (Data Encryption Standard).
     entree : %i0, la chaine de 64 bits (le bit 1 aligne a gauche).
-            %i1, la cle de 64 bits (le bit 1 aligne a gauche).
-            %i2, l'adresse de la chaine de sortie (effectif si non nul).
+             %i1, la cle de 64 bits (le bit 1 aligne a gauche).
+             %i2, l'adresse de la chaine de sortie (effectif si non nul).
     sortie : %o0, la chaine encodee de 64 bits (le bit 1 aligne a gauche).
     auteur:  Vincent Ribou et Martin Rancourt Universite de Sherbrooke, 2015.
 */
 
         .section ".text"
 
-DES:    save    %sp,-208,%sp 
+DES:    
+        save    %sp,-208,%sp
+        
         setx    IP,%l7,%o1        ! chargement de l''adresse de la table IP
-        mov     %i0,%o0           ! chaine de 64 bits
+        mov     %i1,%o0           ! chaine de 64 bits
         mov     64,%o2            ! nb d''entrees dans la table de permutation
         call    Perm              ! permutation de la chaine de 64 bits
         nop
 
-        srlx    %i0,32,%l1        ! 32 bit a gauche
-
-        sllx    %i0,32,%l2        ! elimmination de ce qui a a droit des 32 bit de gauche
-        srlx    %l2,32,%l2        ! 32 bit de droite
+        srlx   %i0,32,%l1        ! 32 bit a gauche
+        sllx   %l1,32,%l1        ! 32 alignement a gauche
+        sllx   %i0,32,%l2        ! elimmination de ce qui a a droit des 32 bit de gauche
+        srlx   %l2,32,%l2        ! 32 bit de droite
 
         mov     %i1,%o0           ! cle de 64 bit
         call    Key
@@ -31,36 +33,52 @@ des05:
         call    NextKey
         nop
 
+        mov     %o0,%o1
         mov     %l2,%o0  
-        mov     %i0,%o1
+
+        /*
+        mov     %o1,%l5
+        setx    ptfmtxx,%l7,%o0  
+        mov     %l5,%o2             
+        srlx    %o2,32,%o1      
+        call    printf            
+        nop
+        mov     %l5,%o1
+        */
+ 
+        mov     %o0,%l5
+        setx    ptfmtxx,%l7,%o0  
+        mov     %l2,%o2             
+        srlx    %o2,32,%o1      
+        call    printf            
+        nop
+        mov     %l5,%o0
+
         call    DESf
         nop
 
         xor     %o0,%l1,%l4       ! ou excluif entre la partie de gauche et resultat de f
+
         mov     %l2,%l1           ! inverse le cote gauche du droit
+        sllx    %l1,32,%l1
         mov     %l4,%l2
 
         dec     %l3
         brnz    %l3,des05         ! boucle
         nop
 
-des10:  mov     %l2,%o0
+des10:  
         call    NextKey
         nop
 
-        mov     %i0,%o1
+        mov     %o0,%o1
+        mov     %l2,%o0  
         call    DESf
         nop
 
-        setx    ptfmtxx,%l7,%o0  
-        mov     %o0,%o2             
-        srlx    %o2,32,%o1      
-        call    printf            
-        nop
+        xor     %o0,%l2,%l4         ! ou excluif entre la partie de gauche et resultat de f
 
-        xor     %i0,%l2,%l4         ! ou excluif entre la partie de gauche et resultat de f
-
-        sllx    %l4,32,%l4          ! deplcament de 32 vers la gauche
+        sllx    %l4,32,%l4          ! decalage de 32 bits vers la gauche
         or      %l4,%l1,%o0
 
         setx    IP_1,%l7,%o1
@@ -68,14 +86,15 @@ des10:  mov     %l2,%o0
 
         call    Perm
         nop
-        mov     %i0,%i0
+
+        mov     %o0,%i0
 
         ret
-        restore %sp,-208,%sp
+        restore
 
 
         .section ".rodata"      ! segment de donnees en lecture seulement
-        ptfmtxx:.asciz "%08x%08x\n"
+ptfmtxx: .asciz "%08x%08x\n"
 
         .align  4
 IP:     .byte   58,50,42,34,26,18,10,2
