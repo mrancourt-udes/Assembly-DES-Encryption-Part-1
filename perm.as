@@ -1,4 +1,4 @@
-.global Perm
+        .global Perm
 /*  Perm   : sous-programme qui permute une chaine de bits.
     entree : %i0, la chaine de bits (le bit 1 aligne a gauche).
              %i1, l'adresse de la table de permutation.
@@ -13,17 +13,7 @@ Perm:
 
         clr     %l0                 ! initialisation du compteur de tableau 
         clr     %l3                 ! valeur de sortie : a transferer dans %o0
-
-        /*
-        setx    I0,%l7,%i0
-        ldx    [%i0],%i0
-        setx    ptfmt1xx,%l7,%o0  
-        mov     %i0,%o2             
-        srlx    %o2,32,%o1      
-        call    printf            
-        nop
-        */
-
+      
 perm05: 
         
         ldub    [%i1+%l0],%l2       ! chargement de l''index de permutation
@@ -33,7 +23,7 @@ perm05:
         sub     %l2,%l0,%l5         ! index de permutation - index effectif : indice de decalage
 
         mov     1,%l4               ! initialisation du bit du mask 
-        sllx    %l4,%l1,%l1         ! decalage du bit vers la position du bit courant
+        sllx    %l4,%l1,%l1         ! decalage du bit vers la position du bit a recuperer
 
         and     %l1,%i0,%l1         ! recuperation de la valeur du bit courent
         cmp     %l5,%g0
@@ -60,25 +50,5 @@ perm20:
 
         mov     %l3,%i0             ! copie de la valeur de sortie temporaire dans %o0
 
-        /*
-        setx    ptfmt2xx,%l7,%o0  
-        mov     %i0,%o2             
-        srlx    %o2,32,%o1      
-        call    printf            
-        nop
-        call exit
-        nop
-        */
-
         ret
         restore
-        
-        
-        .section ".rodata"          ! section de donnees en lecture seulement
-
-ptfmtd: .asciz "%d\n"
-ptfmtxx:.asciz "%08x%08x\n"
-ptfmt1xx:.asciz "INPUT  : %08x%08x\n"
-ptfmt2xx:.asciz "OUTPUT : %08x%08x\n"
-        .align 8
-I0:    .xword  0xFFFFFFFF00000000

@@ -6,95 +6,74 @@
     sortie : %o0, la chaine encodee de 64 bits (le bit 1 aligne a gauche).
     auteur:  Vincent Ribou et Martin Rancourt Universite de Sherbrooke, 2015.
 */
-
         .section ".text"
 
 DES:    
         save    %sp,-208,%sp
         
-        setx    IP,%l7,%o1        ! chargement de l''adresse de la table IP
-        mov     %i1,%o0           ! chaine de 64 bits
-        mov     64,%o2            ! nb d''entrees dans la table de permutation
-        call    Perm              ! permutation de la chaine de 64 bits
+        setx    IP,%l7,%o1          ! l'adresse de la table de permutation
+        mov     %i1,%o0             ! la chaine de 64 bits
+        mov     64,%o2              ! nombre d'entrees dans la table de permutation
+        call    Perm                ! permutation de la chaine de 64 bits
         nop
 
-        srlx   %i0,32,%l1        ! 32 bit a gauche
-        sllx   %l1,32,%l1        ! 32 alignement a gauche
-        sllx   %i0,32,%l2        ! elimmination de ce qui a a droit des 32 bit de gauche
-        srlx   %l2,32,%l2        ! 32 bit de droite
+        srlx   %i0,32,%l1           ! 32 bit a gauche
+        sllx   %l1,32,%l1           ! 32 alignement a gauche
+        sllx   %i0,32,%l2           ! conservation des 32 bits de gauche
 
-        mov     %i1,%o0           ! cle de 64 bit
+        mov     %i1,%o0             ! cle de 64 bit
         call    Key
         nop
 
-        mov     15,%l3            ! nombre de cles a generer
+        mov     15,%l3              ! nombre de cles a generer
 
-des05:          
-        call    NextKey
+des05:       
+
+        call    NextKey             ! generation de la cle de 48 bits
         nop
 
-        mov     %o0,%o1
-        mov     %l2,%o0  
-
-        /*
-        mov     %o1,%l5
-        setx    ptfmtxx,%l7,%o0  
-        mov     %l5,%o2             
-        srlx    %o2,32,%o1      
-        call    printf            
-        nop
-        mov     %l5,%o1
-        */
- 
-        mov     %o0,%l5
-        setx    ptfmtxx,%l7,%o0  
-        mov     %l2,%o2             
-        srlx    %o2,32,%o1      
-        call    printf            
-        nop
-        mov     %l5,%o0
+        mov     %o0,%o1             ! la cle de 48 bits
+        mov     %l2,%o0             ! la chaine de 32 bits
 
         call    DESf
         nop
 
-        xor     %o0,%l1,%l4       ! ou excluif entre la partie de gauche et resultat de f
+        xor     %o0,%l1,%l4         ! ou excluif entre la partie de gauche et resultat de f
 
-        mov     %l2,%l1           ! inverse le cote gauche du droit
-        sllx    %l1,32,%l1
-        mov     %l4,%l2
+        mov     %l2,%l1             ! inverse le cote gauche vers le droit
+        mov     %l4,%l2             ! inverse le cote droit vers le gauche
 
         dec     %l3
-        brnz    %l3,des05         ! boucle
+        brnz    %l3,des05           ! atteint les 15 cles ?
         nop
 
 des10:  
         call    NextKey
         nop
 
-        mov     %o0,%o1
-        mov     %l2,%o0  
+        mov     %o0,%o1             ! la cle de 48 bits
+        mov     %l2,%o0             ! la chaine de 32 bits
+
         call    DESf
         nop
 
         xor     %o0,%l2,%l4         ! ou excluif entre la partie de gauche et resultat de f
 
-        sllx    %l4,32,%l4          ! decalage de 32 bits vers la gauche
-        or      %l4,%l1,%o0
+        srlx    %l4,32,%l4          ! decalage de 32 bits vers la gauche
 
-        setx    IP_1,%l7,%o1
-        mov     64,%o2
+        or      %l4,%l1,%o0         ! la chaine de 64 bits        
+        setx    IP_1,%l7,%o1        ! l'adresse de la table de permutation
+        mov     64,%o2              ! nombre d'entrees dans la table de permutation
 
         call    Perm
         nop
 
-        mov     %o0,%i0
+        mov     %o0,%i0             ! la chaine encodee de 64 bits
 
         ret
         restore
 
-
-        .section ".rodata"      ! segment de donnees en lecture seulement
-ptfmtxx: .asciz "%08x%08x\n"
+        .section ".rodata"          ! segment de donnees en lecture seulement
 
         .align  4
 IP:     .byte   58,50,42,34,26,18,10,2
@@ -206,5 +185,3 @@ PC_2:   .byte   14,17,11,24,1,5
 
         .align  4
 LS:     .byte   1,1,2,2,2,2,2,2,1,2,2,2,2,2,2,1
-
-
