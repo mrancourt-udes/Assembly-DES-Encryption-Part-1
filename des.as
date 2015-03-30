@@ -14,26 +14,31 @@ DES:    save    %sp,-208,%sp
         mov     %i0,%o0           ! chaine de 64 bits
         mov     64,%o2            ! nb d''entrees dans la table de permutation
         call    Perm              ! permutation de la chaine de 64 bits
+        nop
 
-        srlx    %l1,32,%l1        ! 32 bit a gauche
+        srlx    %i0,32,%l1        ! 32 bit a gauche
+
         sllx    %i0,32,%l2        ! elimmination de ce qui a a droit des 32 bit de gauche
         srlx    %l2,32,%l2        ! 32 bit de droite
 
         mov     %i1,%o0           ! cle de 64 bit
         call    Key
+        nop
 
         mov     15,%l3            ! nombre de cles a generer
 
-des05:  mov     %l2,%o0           
+des05:          
         call    NextKey
+        nop
+
+        mov     %l2,%o0  
         mov     %i0,%o1
         call    DESf
+        nop
 
-
-        xor     %i0,%l1,%l4       ! ou excluif entre la partie de gauche et resultat de f
+        xor     %o0,%l1,%l4       ! ou excluif entre la partie de gauche et resultat de f
         mov     %l2,%l1           ! inverse le cote gauche du droit
         mov     %l4,%l2
-
 
         dec     %l3
         brnz    %l3,des05         ! boucle
@@ -41,8 +46,17 @@ des05:  mov     %l2,%o0
 
 des10:  mov     %l2,%o0
         call    NextKey
+        nop
+
         mov     %i0,%o1
         call    DESf
+        nop
+
+        setx    ptfmtxx,%l7,%o0  
+        mov     %o0,%o2             
+        srlx    %o2,32,%o1      
+        call    printf            
+        nop
 
         xor     %i0,%l2,%l4         ! ou excluif entre la partie de gauche et resultat de f
 
@@ -53,13 +67,16 @@ des10:  mov     %l2,%o0
         mov     64,%o2
 
         call    Perm
-        mov     %i0,%o0
+        nop
+        mov     %i0,%i0
 
         ret
         restore %sp,-208,%sp
 
 
         .section ".rodata"      ! segment de donnees en lecture seulement
+        ptfmtxx:.asciz "%08x%08x\n"
+
         .align  4
 IP:     .byte   58,50,42,34,26,18,10,2
         .byte   60,52,44,36,28,20,12,4
