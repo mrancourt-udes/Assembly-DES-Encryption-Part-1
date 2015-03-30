@@ -9,12 +9,13 @@
 
         .section ".text"
 
-DES:    setx    IP,%l7,%o1        ! chargement de l''adresse de la table IP
-        mov     %i0,%o0            ! chaine de 64 bits
+DES:    save    %sp,-208,%sp 
+        setx    IP,%l7,%o1        ! chargement de l''adresse de la table IP
+        mov     %i0,%o0           ! chaine de 64 bits
         mov     64,%o2            ! nb d''entrees dans la table de permutation
         call    Perm              ! permutation de la chaine de 64 bits
 
-        srlx    %i0,32,%l1        ! 32 bit a gauche
+        srlx    %l1,32,%l1        ! 32 bit a gauche
         sllx    %i0,32,%l2        ! elimmination de ce qui a a droit des 32 bit de gauche
         srlx    %l2,32,%l2        ! 32 bit de droite
 
@@ -29,8 +30,10 @@ des05:  mov     %l2,%o0
         call    DESf
 
 
-        xor     %i0,%l1,%l2       ! ou excluif entre la partie de gauche et resultat de f
+        xor     %i0,%l1,%l4       ! ou excluif entre la partie de gauche et resultat de f
         mov     %l2,%l1           ! inverse le cote gauche du droit
+        mov     %l4,%l2
+
 
         dec     %l3
         brnz    %l3,des05         ! boucle
@@ -38,12 +41,12 @@ des05:  mov     %l2,%o0
 
 des10:  mov     %l2,%o0
         call    NextKey
-        mov     %l0,%o1
+        mov     %i0,%o1
         call    DESf
 
-        xor     %i0,%l2,%l4
+        xor     %i0,%l2,%l4         ! ou excluif entre la partie de gauche et resultat de f
 
-        sllx    %l4,32,%l4
+        sllx    %l4,32,%l4          ! deplcament de 32 vers la gauche
         or      %l4,%l1,%o0
 
         setx    IP_1,%l7,%o1
@@ -51,6 +54,9 @@ des10:  mov     %l2,%o0
 
         call    Perm
         mov     %i0,%o0
+
+        ret
+        restore %sp,-208,%sp
 
 
         .section ".rodata"      ! segment de donnees en lecture seulement
