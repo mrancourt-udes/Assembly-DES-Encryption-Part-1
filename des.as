@@ -27,7 +27,7 @@ DES:
 
         mov     15,%l3              ! nombre de cles a generer
 
-des05:       
+DES05:       
 
         call    NextKey             ! generation de la cle de 48 bits
         nop
@@ -44,10 +44,10 @@ des05:
         mov     %l4,%l2             ! inverse le cote droit vers le gauche
 
         dec     %l3
-        brnz    %l3,des05           ! atteint les 15 cles ?
+        brnz    %l3,DES05           ! atteint les 15 cles ?
         nop
 
-des10:  
+DES10:  
         call    NextKey
         nop
 

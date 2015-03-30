@@ -14,7 +14,7 @@ Perm:
         clr     %l0                 ! initialisation du compteur de tableau 
         clr     %l3                 ! valeur de sortie : a transferer dans %o0
       
-perm05: 
+Perm05: 
         
         ldub    [%i1+%l0],%l2       ! chargement de l''index de permutation
         inc     1,%l0               ! index dans la table
@@ -27,25 +27,25 @@ perm05:
 
         and     %l1,%i0,%l1         ! recuperation de la valeur du bit courent
         cmp     %l5,%g0
-        bneg    %xcc,perm15
+        bneg    %xcc,Perm15
         nop
 
-perm10:                             ! decalage positif
+Perm10:                             ! decalage positif
         sllx    %l1,%l5,%l1
 
-        ba      perm20
+        ba      Perm20
         nop
 
-perm15:                             ! decalage negatif
+Perm15:                             ! decalage negatif
         neg     %l5,%l5             
         srlx    %l1,%l5,%l1
 
-perm20:     
+Perm20:     
 
         or     %l3,%l1,%l3
 
         cmp     %l0,%i2             ! cmp index tableau avec nb elements tableau
-        bne     perm05              ! fin du tableau ?
+        bne     Perm05              ! fin du tableau ?
         nop
 
         mov     %l3,%i0             ! copie de la valeur de sortie temporaire dans %o0
